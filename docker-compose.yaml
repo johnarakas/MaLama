@@ -1,0 +1,28 @@
+services:
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - C:/Users/johna/.ollama/models:/root/.ollama/models  # Corrected volume mount
+    networks:
+      - ollama-net
+
+  open-web-ui:
+    image: ghcr.io/open-webui/open-webui:main
+    ports:
+      - "8080:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    depends_on:
+      - ollama
+    networks:
+      - ollama-net
+    volumes:
+      - open-webui:/app/backend/data  # This is fine
+
+volumes:
+  open-webui:  # Named volume for Open WebUI
+
+networks:
+  ollama-net:
